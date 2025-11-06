@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>La Suerte de Alexei</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #1a1a1a, #333);
+      color: #fff;
+      overflow-x: hidden;
+    }
+    h1, h2, h3 { margin: 0; text-align: center; }
+    header {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: url('https://images.unsplash.com/photo-1600803904006-1055ecffbd5b') no-repeat center/cover;
+      position: relative;
+      overflow: hidden;
+    }
+    header::after {
+      content: '';
+      position: absolute;
+      top:0; left:0; width:100%; height:100%;
+      background: rgba(0,0,0,0.6);
+    }
+    header h1 {
+      font-size: 4rem;
+      z-index: 1;
+      color: #ffd700;
+      text-shadow: 0 0 10px #ffd700, 0 0 20px #ffdc73;
+    }
+    header button {
+      margin-top: 20px; padding: 15px 35px;
+      font-size: 1.5rem; border: none; border-radius: 12px;
+      background: #ffd700; color: #1a1a1a; cursor: pointer;
+      z-index: 1; transition: all 0.3s ease;
+    }
+    header button:hover { transform: scale(1.1); box-shadow: 0 0 20px #ffd700; }
+
+    section { padding: 60px 20px; text-align: center; }
+    .section-title { font-size: 2.5rem; margin-bottom: 30px; color: #ffd700; text-shadow: 0 0 5px #ffd700; }
+
+    .games { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
+    .game-card {
+      background: #222; padding: 20px; border-radius: 15px; width: 250px;
+      box-shadow: 0 0 10px #ffd70050; transition: transform 0.3s ease;
+    }
+    .game-card:hover { transform: translateY(-10px); box-shadow: 0 0 20px #ffd700; }
+    .game-card h3 { margin-bottom: 10px; color: #ffd700; }
+    .game-card p { font-size: 1.2rem; margin-bottom: 15px; }
+    .game-card button {
+      padding: 10px 20px; border: none; border-radius: 10px;
+      background: #ffd700; color: #1a1a1a; cursor: pointer; transition: all 0.3s ease;
+    }
+    .game-card button:hover { transform: scale(1.05); box-shadow: 0 0 15px #ffd700; }
+
+    .ritual { max-width: 800px; margin: 0 auto; font-size: 1.2rem; line-height: 1.6; background: rgba(255, 215, 0, 0.05); padding: 30px; border-radius: 15px; box-shadow: 0 0 20px #ffd70020 inset; }
+
+    footer { background: #111; padding: 30px 20px; text-align: center; color: #ffd700; }
+    footer a { margin: 0 10px; color: #ffd700; font-weight: bold; transition: all 0.3s ease; }
+    footer a:hover { transform: scale(1.2); text-shadow: 0 0 10px #ffd700; }
+
+    .confetti { position: absolute; width: 10px; height: 10px; background: #ffd700; top: -10px; animation: fall 5s linear infinite; }
+    @keyframes fall { 0% { transform: translateY(0) rotate(0deg); opacity:1; } 100% { transform: translateY(100vh) rotate(360deg); opacity:0; } }
+
+    /* Ruleta de suerte */
+    .roulette-container { display: flex; justify-content: center; margin-top: 30px; }
+    .roulette {
+      width: 300px; height: 300px; border-radius: 50%; border: 10px solid #ffd700;
+      display: flex; justify-content: center; align-items: center; font-size: 2rem;
+      position: relative; transition: transform 4s cubic-bezier(0.25, 1, 0.5, 1);
+      background: conic-gradient(#ffdc73 0% 10%, #ffd700 10% 20%, #ffdc73 20% 30%, #ffd700 30% 40%, #ffdc73 40% 50%, #ffd700 50% 60%, #ffdc73 60% 70%, #ffd700 70% 80%, #ffdc73 80% 90%, #ffd700 90% 100%);
+    }
+    .roulette:after {
+      content: '';
+      position: absolute;
+      top: -15px; left: 50%;
+      transform: translateX(-50%);
+      border: 15px solid transparent;
+      border-bottom-color: #ffd700;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hero -->
+  <header>
+    <h1>La Suerte de Alexei</h1>
+    <button onclick="scrollToGames()">Jugar Ahora</button>
+  </header>
+
+  <!-- Juegos -->
+  <section id="games">
+    <h2 class="section-title">Juegos</h2>
+    <div class="games">
+      <div class="game-card">
+        <h3>Powerball</h3>
+        <p id="powerball">Números: --</p>
+        <button onclick="alert('¡Mucha suerte con Powerball!')">Probar Suerte</button>
+      </div>
+      <div class="game-card">
+        <h3>Mega Millions</h3>
+        <p id="mega">Números: --</p>
+        <button onclick="alert('¡Mucha suerte con Mega Millions!')">Probar Suerte</button>
+      </div>
+      <div class="game-card">
+        <h3>Euromillones</h3>
+        <p id="euromillones">Números: --</p>
+        <button onclick="alert('¡Mucha suerte con Euromillones!')">Probar Suerte</button>
+      </div>
+    </div>
+
+    <div class="roulette-container">
+      <div class="roulette" id="roulette">🎲</div>
+    </div>
+    <button onclick="spinRoulette()" style="margin-top:20px; padding:15px 30px; font-size:1.2rem; border-radius:10px; border:none; background:#ffd700; color:#1a1a1a; cursor:pointer;">Girar Ruleta de la Suerte</button>
+  </section>
+
+  <!-- Ritual -->
+  <section id="ritual">
+    <h2 class="section-title">Ritual de Suerte</h2>
+    <div class="ritual">
+      <p>Para atraer la buena suerte, respira profundo, visualiza tu victoria y confía en tu intuición. Cada número que juegues es un paso hacia tu fortuna. ¡Recuerda siempre mantener una energía positiva y alegre mientras juegas!</p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>Conéctate conmigo:</p>
+    <a href="#">Instagram</a>
+    <a href="#">TikTok</a>
+    <a href="#">Contacto</a>
+    <p>&copy; 2025 La Suerte de Alexei</p>
+  </footer>
+
+  <script>
+    // Scroll suave
+    function scrollToGames() { document.getElementById('games').scrollIntoView({behavior:'smooth'}); }
+
+    // Confeti
+    for(let i=0;i<50;i++){
+      let confetti=document.createElement('div');
+      confetti.classList.add('confetti');
+      confetti.style.left=Math.random()*100+'vw';
+      confetti.style.animationDuration=3+Math.random()*3+'s';
+      confetti.style.width=confetti.style.height=5+Math.random()*10+'px';
+      document.body.appendChild(confetti);
+    }
+
+    // Generar números aleatorios
+    function getRandomNumbers(count,max){
+      let nums = [];
+      while(nums.length<count){
+        let n=Math.floor(Math.random()*max)+1;
+        if(!nums.includes(n)) nums.push(n);
+      }
+      return nums.map(n => n.toString().padStart(2,'0')).join(' - ');
+    }
+
+    document.getElementById('powerball').innerText = 'Números: ' + getRandomNumbers(5,69);
+    document.getElementById('mega').innerText = 'Números: ' + getRandomNumbers(5,70);
+    document.getElementById('euromillones').innerText = 'Números: ' + getRandomNumbers(5,50);
+
+    // Ruleta de suerte
+    let roulette = document.getElementById('roulette');
+    function spinRoulette(){
+      let angle = 360*5 + Math.floor(Math.random()*360);
+      roulette.style.transform = `rotate(${angle}deg)`;
+      setTimeout(()=>{ alert('¡La ruleta de la suerte ha hablado! 🍀'); },4000);
+    }
+  </script>
+
+</body>
+</html>
